@@ -1,64 +1,71 @@
 package csc435.app;
 
-import java.lang.System;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ClientAppInterface {
     private ClientProcessingEngine engine;
 
+    // ClientProcessingEngine initialization constructor
     public ClientAppInterface(ClientProcessingEngine engine) {
         this.engine = engine;
-
-        // TO-DO implement constructor
-        // keep track of the connection with the client
     }
 
+    // Technique for reading user instructions
     public void readCommands() {
-        // TO-DO implement the read commands method
         Scanner sc = new Scanner(System.in);
         String command;
-        
+
+        // Continue reading instructions until "quit" is typed.
         while (true) {
             System.out.print("> ");
-            
-            // read from command line
             command = sc.nextLine();
 
-            // if the command is quit, terminate the program       
-            if (command.compareTo("quit") == 0) {
+            // Exit if "quit" command is given
+            if (command.equals("quit")) {
                 break;
             }
 
-            // if the command begins with connect, connect to the given server
-            if (command.length() >= 7 && command.substring(0, 7).compareTo("connect") == 0) {
-                // TO-DO implement index operation
-                // call the connect method from the server side engine
+            // command to establish a connection with the server
+            if (command.startsWith("connect")) {
+                String[] parts = command.split(" ");
+                if (parts.length == 3) {
+                    engine.connect(parts[1], parts[2]);
+                }
                 continue;
             }
 
-            // if the command begins with get_info, print the client ID
-            if (command.length() >= 7 && command.substring(0, 8).compareTo("get_info") == 0) {
-                // TO-DO parse command cand call getInfo on the processing engine
-                // TO-DO print the client ID
-                continue;
-            }
-            
-            // if the command begins with index, index the files from the specified directory
-            if (command.length() >= 5 && command.substring(0, 5).compareTo("index") == 0) {
-                // TO-DO implement index operation
-                // call the index method on the serve side engine and pass the folder to be indexed
-                continue;
-            }
-            
-
-            // if the command begins with search, search for files that matches the query
-            if (command.length() >= 6 && command.substring(0, 6).compareTo("search") == 0) {
-                // TO-DO implement index operation
-                // extract the terms and call the server side engine method to search the terms for files
+            // To obtain the client ID, use this command.
+            if (command.startsWith("get_info")) {
+                long clientId = engine.getInfo();
+                System.out.println("Client ID: " + clientId);
                 continue;
             }
 
-            System.out.println("unrecognized command!");
+            // An indexing command for a folder
+            if (command.startsWith("index")) {
+                String[] parts = command.split(" ");
+                if (parts.length == 2) {
+                    String folderPath = parts[1];
+                    engine.indexFolder(folderPath);
+                }
+                continue;
+            }
+
+             // The ability to search words
+            if (command.startsWith("search"))  {
+                String[] parts = command.split(" ");
+                if (parts.length > 1) {
+                    ArrayList<String> terms = new ArrayList<>();
+                    for (int i = 1; i < parts.length; i++) {
+                        terms.add(parts[i]);
+                    }
+                    engine.search(terms);
+                }
+                continue;
+            }
+
+            System.out.println("Unrecognized command!");
         }
 
         sc.close();
