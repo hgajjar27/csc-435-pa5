@@ -1,7 +1,7 @@
  ## CSC 435 Programming Assignment 5 (Winter 2025)
 **Jarvis College of Computing and Digital Media - DePaul University**
 
-**Student**: Harshal Gajjar (hgajjar@gmail.com)  
+**Student**: Harshal Gajjar (hgajjar@depaul.edu)  
 **Solution programming language**: Java (Java or C++)
 
 ### Requirements
