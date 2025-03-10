@@ -1,6 +1,5 @@
 package csc435.app;
 
-import java.lang.System;
 import java.util.Scanner;
 
 public class ServerAppInterface {
@@ -11,23 +10,18 @@ public class ServerAppInterface {
     }
 
     public void readCommands() {
-        // TO-DO implement the read commands method
         Scanner sc = new Scanner(System.in);
         String command;
-        
+
         while (true) {
             System.out.print("> ");
-            
-            // read from command line
             command = sc.nextLine();
 
-            // if the command is quit, terminate the program       
-            if (command.compareTo("quit") == 0) {
-                engine.shutdown();
+            if (command.equals("quit")) {
                 break;
             }
 
-            System.out.println("unrecognized command!");
+            System.out.println("Unrecognized command!");
         }
 
         sc.close();
