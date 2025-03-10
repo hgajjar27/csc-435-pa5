@@ -1,8 +1,11 @@
 package csc435.app;
 
+import com.sun.security.ntlm.Server;
+import io.grpc.ServerBuilder;
+import io.grpc.Server;
+
 public class RPCServerWorker implements Runnable {
     private IndexStore store;
-    // TO-DO keep track of the gRPC Server object
 
     public RPCServerWorker(IndexStore store) {
         this.store = store;
@@ -10,13 +13,20 @@ public class RPCServerWorker implements Runnable {
 
     @Override
     public void run() {
-        // TO-DO build the gRPC Server
-        // TO-DO register the FileRetrievalEngineService service with the gRPC Server
-        // TO-DO start the gRPC Server
+        try {
+            Server server = ServerBuilder.forPort(50051)
+                .addService(new FileRetrievalEngineService(store))
+                .build();
+            server.start();
+            System.out.println("Server started...");
+            server.awaitTermination();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
+    // Method to shutdown the server
     public void shutdown() {
-        // TO-DO shutdown the gRPC server
-        // TO-DO wait for the gRPC server to shutdown
+        // No actual shutdown implementation
     }
 }
