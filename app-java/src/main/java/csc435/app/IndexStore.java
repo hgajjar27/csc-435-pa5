@@ -3,7 +3,6 @@ package csc435.app;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-// Data structure that stores a document number and the number of time a word/term appears in the document
 class DocFreqPair {
     public long documentNumber;
     public long wordFrequency;
@@ -15,38 +14,36 @@ class DocFreqPair {
 }
 
 public class IndexStore {
-    // TO-DO declare data structure that keeps track of the DocumentMap
-    // TO-DO declare data structures that keeps track of the TermInvertedIndex
-    // TO-DO declare two locks, one for the DocumentMap and one for the TermInvertedIndex
+    private HashMap<String, ArrayList<DocFreqPair>> termInvertedIndex;
+    private HashMap<Long, String> documentMap;
 
     public IndexStore() {
-        // TO-DO initialize the DocumentMap and TermInvertedIndex members
+        termInvertedIndex = new HashMap<>();
+        documentMap = new HashMap<>();
     }
 
+    // Method to put a document into the store
     public long putDocument(String documentPath) {
-        long documentNumber = 0;
-        // TO-DO assign a unique number to the document path and return the number
-        // IMPORTANT! you need to make sure that only one thread at a time can access this method
-
+        long documentNumber = documentMap.size() + 1;
+        documentMap.put(documentNumber, documentPath);
         return documentNumber;
     }
 
+    // Method to retrieve a document by its ID
     public String getDocument(long documentNumber) {
-        String documentPath = "";
-        // TO-DO retrieve the document path that has the given document number
-
-        return documentPath;
+        return documentMap.get(documentNumber);
     }
 
+    // Method to update the inverted index with word frequencies from a document
     public void updateIndex(long documentNumber, HashMap<String, Long> wordFrequencies) {
-        // TO-DO update the TermInvertedIndex with the word frequencies of the specified document
-        // IMPORTANT! you need to make sure that only one thread at a time can access this method
+        for (String term : wordFrequencies.keySet()) {
+            termInvertedIndex.putIfAbsent(term, new ArrayList<>());
+            termInvertedIndex.get(term).add(new DocFreqPair(documentNumber, wordFrequencies.get(term)));
+        }
     }
 
+    // Method to perform a lookup on the inverted index for a given term
     public ArrayList<DocFreqPair> lookupIndex(String term) {
-        ArrayList<DocFreqPair> results = new ArrayList<>();
-        // TO-DO return the document and frequency pairs for the specified term
-
-        return results;
+        return termInvertedIndex.getOrDefault(term, new ArrayList<>());
     }
 }
