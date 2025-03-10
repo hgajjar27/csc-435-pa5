@@ -1,20 +1,14 @@
 package csc435.app;
 
-public class FileRetrievalServer
-{
-    public static void main( String[] args )
-    {
-        // TO-DO change server port to a non-privileged port from args[0]
-        int serverPort = 1;
+public class FileRetrievalServer {
+    public static void main(String[] args) {
+        int serverPort = Integer.parseInt(args[0]);
 
+        // Initialize index store and server processing engine
         IndexStore store = new IndexStore();
         ServerProcessingEngine engine = new ServerProcessingEngine(store);
-        ServerAppInterface appInterface = new ServerAppInterface(engine);
         
-        // create a thread that runs the gRPC server
+        // Start the gRPC server on the specified port
         engine.initialize(serverPort);
-
-        // read commands from the user
-        appInterface.readCommands();
     }
 }
